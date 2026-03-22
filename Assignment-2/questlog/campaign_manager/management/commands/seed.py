@@ -14,7 +14,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from campaign_manager.models import (
     Campaign, CampaignPlayer, Character,
-    Item, CharacterItem, Session, Encounter,
+    Item, CharacterItem, Session, Encounter, Spell, CharacterSpell
 )
 
 
@@ -505,6 +505,435 @@ class Command(BaseCommand):
             },
         )
 
+        # ── Spells & Abilities ───────────────────────────────────────────────
+        self.stdout.write('Creating spells and abilities...')
+
+        # Classic Spells
+        fireball, _ = Spell.objects.get_or_create(
+            name="Fireball",
+            defaults={
+                "description": "A powerful explosion that deals massive area damage",
+                "level_required": 5,
+                "damage_effect": "8d6 fire damage (AoE)",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        magic_missile, _ = Spell.objects.get_or_create(
+            name="Magic Missile",
+            defaults={
+                "description": "Automatically hits targets with glowing darts of force",
+                "level_required": 1,
+                "damage_effect": "3 darts, 1d4+1 each",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        cure_wounds, _ = Spell.objects.get_or_create(
+            name="Cure Wounds",
+            defaults={
+                "description": "Restores hit points to a creature",
+                "level_required": 1,
+                "damage_effect": "Heals 1d8 + spellcasting modifier",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        shield, _ = Spell.objects.get_or_create(
+            name="Shield",
+            defaults={
+                "description": "A quick magical barrier that boosts your defense",
+                "level_required": 1,
+                "damage_effect": "+5 AC until start of next turn",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        invisibility, _ = Spell.objects.get_or_create(
+            name="Invisibility",
+            defaults={
+                "description": "Turns a creature unseen for stealth or escape",
+                "level_required": 2,
+                "damage_effect": "Creature becomes invisible",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        counterspell, _ = Spell.objects.get_or_create(
+            name="Counterspell",
+            defaults={
+                "description": "Interrupts another spellcaster mid-cast",
+                "level_required": 3,
+                "damage_effect": "Automatically stops a spell of lower or equal level",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        fly, _ = Spell.objects.get_or_create(
+            name="Fly",
+            defaults={
+                "description": "Grants the ability to soar through the air",
+                "level_required": 3,
+                "damage_effect": "Can fly at 60 ft speed",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        polymorph, _ = Spell.objects.get_or_create(
+            name="Polymorph",
+            defaults={
+                "description": "Transforms a creature into another form",
+                "level_required": 4,
+                "damage_effect": "Changes target into beast form",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        # Combat-Oriented Spells
+        eldritch_blast, _ = Spell.objects.get_or_create(
+            name="Eldritch Blast",
+            defaults={
+                "description": "A staple ranged attack for warlocks",
+                "level_required": 1,
+                "damage_effect": "1d10 force damage",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        inflict_wounds, _ = Spell.objects.get_or_create(
+            name="Inflict Wounds",
+            defaults={
+                "description": "Deals heavy necrotic damage through touch",
+                "level_required": 1,
+                "damage_effect": "3d10 necrotic damage",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        spiritual_weapon, _ = Spell.objects.get_or_create(
+            name="Spiritual Weapon",
+            defaults={
+                "description": "Summons a floating weapon that attacks independently",
+                "level_required": 2,
+                "damage_effect": "1d8 + spellcasting modifier force damage per attack",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        hunters_mark, _ = Spell.objects.get_or_create(
+            name="Hunter's Mark",
+            defaults={
+                "description": "Enhances damage against a chosen target",
+                "level_required": 1,
+                "damage_effect": "Extra 1d6 damage on attacks against marked target",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        guiding_bolt, _ = Spell.objects.get_or_create(
+            name="Guiding Bolt",
+            defaults={
+                "description": "Radiant attack that grants advantage to the next hit",
+                "level_required": 1,
+                "damage_effect": "4d6 radiant damage and next attack has advantage",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        # Utility & Support Spells
+        detect_magic, _ = Spell.objects.get_or_create(
+            name="Detect Magic",
+            defaults={
+                "description": "Reveals magical auras nearby",
+                "level_required": 1,
+                "damage_effect": "Detect magical presence",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        identify, _ = Spell.objects.get_or_create(
+            name="Identify",
+            defaults={
+                "description": "Learns properties of magical items",
+                "level_required": 1,
+                "damage_effect": "Reveals magical properties of one object",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        mage_hand, _ = Spell.objects.get_or_create(
+            name="Mage Hand",
+            defaults={
+                "description": "Creates a spectral hand for interacting at a distance",
+                "level_required": 1,
+                "damage_effect": "Move/manipulate objects at 30 ft",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        leomunds_tiny_hut, _ = Spell.objects.get_or_create(
+            name="Leomund's Tiny Hut",
+            defaults={
+                "description": "A protective dome for safe resting",
+                "level_required": 3,
+                "damage_effect": "Creates a dome that is impervious to external effects",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        feather_fall, _ = Spell.objects.get_or_create(
+            name="Feather Fall",
+            defaults={
+                "description": "Slows descent to prevent fall damage",
+                "level_required": 1,
+                "damage_effect": "Reduces falling speed, no damage",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+        # Class Abilities (Non-spell)
+        rage, _ = Spell.objects.get_or_create(
+            name="Rage",
+            defaults={
+                "description": "Boosts damage and resistance to harm",
+                "level_required": 2,
+                "damage_effect": "+2 melee damage, resistance to physical damage",
+                "usage_limit": 3,
+                "type": "ability",
+            }
+        )
+
+        sneak_attack, _ = Spell.objects.get_or_create(
+            name="Sneak Attack",
+            defaults={
+                "description": "Deals extra damage when attacking with advantage or positioning",
+                "level_required": 1,
+                "damage_effect": "1d6+1 per sneak attack dice",
+                "usage_limit": None,
+                "type": "ability",
+            }
+        )
+
+        divine_smite, _ = Spell.objects.get_or_create(
+            name="Divine Smite",
+            defaults={
+                "description": "Channels divine energy into weapon strikes",
+                "level_required": 2,
+                "damage_effect": "Adds 2d8 radiant damage on hit",
+                "usage_limit": None,
+                "type": "ability",
+            }
+        )
+
+        wild_shape, _ = Spell.objects.get_or_create(
+            name="Wild Shape",
+            defaults={
+                "description": "Transform into animals",
+                "level_required": 2,
+                "damage_effect": "Change form into selected beast",
+                "usage_limit": None,
+                "type": "ability",
+            }
+        )
+
+        action_surge, _ = Spell.objects.get_or_create(
+            name="Action Surge",
+            defaults={
+                "description": "Take an extra action in combat",
+                "level_required": 2,
+                "damage_effect": "Gain one extra action on your turn",
+                "usage_limit": 1,
+                "type": "ability",
+            }
+        )
+
+        ki, _ = Spell.objects.get_or_create(
+            name="Ki",
+            defaults={
+                "description": "Powers special techniques like Flurry of Blows",
+                "level_required": 2,
+                "damage_effect": "Use ki points for martial techniques",
+                "usage_limit": None,
+                "type": "ability",
+            }
+        )
+
+        # High-Level / Iconic Spells
+        wish, _ = Spell.objects.get_or_create(
+            name="Wish",
+            defaults={
+                "description": "The most powerful spell, capable of altering reality",
+                "level_required": 9,
+                "damage_effect": "Alter reality per DM discretion",
+                "usage_limit": 1,
+                "type": "spell",
+            }
+        )
+
+        meteor_swarm, _ = Spell.objects.get_or_create(
+            name="Meteor Swarm",
+            defaults={
+                "description": "Calls down devastating meteors",
+                "level_required": 9,
+                "damage_effect": "20d6 fire + 20d6 bludgeoning damage",
+                "usage_limit": None,
+                "type": "spell",
+            }
+        )
+
+
+
+        # ── Character Spells / Abilities (CharacterSpell join table) ─────────
+        self.stdout.write('Assigning spells and abilities to characters...')
+
+        # Thorin's spells/abilities
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=fireball,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=magic_missile,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=shield,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=rage,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=action_surge,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=wish,
+            defaults={'prepared': False},  
+        )
+        CharacterSpell.objects.get_or_create(
+            character=thorin, spell=meteor_swarm,
+            defaults={'prepared': False},
+        )
+
+        # Aria's spells/abilities
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=magic_missile,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=cure_wounds,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=fireball,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=shield,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=mage_hand,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=leomunds_tiny_hut,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=wish,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=aria, spell=meteor_swarm,
+            defaults={'prepared': False},
+        )
+
+        # Brand's spells/abilities
+        CharacterSpell.objects.get_or_create(
+            character=brand, spell=rage,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=brand, spell=sneak_attack,
+            defaults={'prepared': True},
+        )
+
+        # Viktor's spells/abilities
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=fireball,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=magic_missile,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=shield,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=action_surge,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=wish,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=viktor, spell=meteor_swarm,
+            defaults={'prepared': False},
+        )
+
+        # Sylva's spells/abilities
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=cure_wounds,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=guiding_bolt,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=spiritual_weapon,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=detect_magic,
+            defaults={'prepared': True},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=identify,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=wish,
+            defaults={'prepared': False},
+        )
+        CharacterSpell.objects.get_or_create(
+            character=sylva, spell=meteor_swarm,
+            defaults={'prepared': False},
+        )
+
         # ── Summary ──────────────────────────────────────────────────────
         self.stdout.write('\n' + '─' * 60)
         self.stdout.write(self.style.SUCCESS('✔  Seeding complete!\n'))
@@ -529,3 +958,4 @@ class Command(BaseCommand):
         self.stdout.write('Run the server:  python manage.py runserver')
         self.stdout.write('Then visit:      http://127.0.0.1:8000/')
         self.stdout.write('─' * 60 + '\n')
+        

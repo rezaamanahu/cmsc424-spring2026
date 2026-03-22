@@ -32,7 +32,7 @@
 
 <!-- ─── Stat Block ────────────────────────────────────────────────── -->
 <div class="card stat-block">
-  <h2>Character Stats</h2>
+  <h2>Character Stats Testing</h2>
   <div class="stat-grid">
     <div class="stat">
       <span class="stat-label">Race</span>
@@ -143,6 +143,76 @@
       {% endif %}
     </div>
   {% endif %}
+</section>
+<!-- ─── Spells ─────────────────────────────────────────────────── -->
+<section class="dashboard-section">
+ <div class="section-header">
+   <h2>Spells & Abilities</h2>
+ </div>
+
+
+ {% if spells %}
+   <table class="data-table">
+     <thead>
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Level Req</th>
+         <th>Effect</th>
+         <th>Usage Limit</th>
+         <th>Prepared</th>
+       </tr>
+     </thead>
+     <tbody>
+       {% for entry in spells %}
+         <tr {% if entry.prepared %}class="row-equipped"{% endif %}>
+           <td>
+             <strong>{{ entry.spell.name }}</strong>
+             {% if entry.spell.description %}
+               <br>
+               <small class="text-muted">
+                 {{ entry.spell.description|truncatechars:60 }}
+               </small>
+             {% endif %}
+           </td>
+
+
+           <td>{{ entry.spell.get_type_display }}</td>
+
+
+           <td>{{ entry.spell.level_required }}</td>
+
+
+           <td>
+             <small>{{ entry.spell.damage_effect }}</small>
+           </td>
+
+
+           <td>
+             {% if entry.spell.usage_limit %}
+               {{ entry.spell.usage_limit }}
+             {% else %}
+               —
+             {% endif %}
+           </td>
+
+
+           <td>
+             {% if entry.prepared %}
+               <span class="equipped-icon" title="Prepared">✔</span>
+             {% else %}
+               <span class="text-muted">—</span>
+             {% endif %}
+           </td>
+         </tr>
+       {% endfor %}
+     </tbody>
+   </table>
+ {% else %}
+   <div class="empty-state">
+     <p>{{ character.name }} knows no spells or abilities.</p>
+   </div>
+ {% endif %}
 </section>
 
 {% endblock %}

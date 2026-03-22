@@ -306,3 +306,98 @@ class Encounter(models.Model):
 
     class Meta:
         ordering = ['session', 'id']
+
+# ─────────────────────────────────────────────────────────────────────
+# Spell
+# ─────────────────────────────────────────────────────────────────────
+
+class Spell(models.Model):
+    """
+    A game item that can exist in any character's inventory.
+
+    Items are not tied to a specific character here — the relationship
+    between characters and items is tracked by CharacterItem below.
+    """
+
+    SPELL_TYPE_CHOICES = [
+        ('spell', 'Spell'),
+        ('ability', 'Ability'),
+    ]
+
+    name           = models.CharField(max_length=200)
+    description    = models.TextField(blank=True)
+    level_required = models.IntegerField()
+    damage_effect  = models.TextField()
+    usage_limit    = models.IntegerField(null=True, blank=True)
+    type           = models.CharField(max_length=10, choices=SPELL_TYPE_CHOICES)
+
+    def __str__(self):
+        return f"{self.name} ({self.get_type_display()})"
+
+    class Meta:
+        ordering = ['name']
+
+
+# ─────────────────────────────────────────────────────────────────────
+# CharacterSpell  (join table: Character ↔ Spell)
+# ─────────────────────────────────────────────────────────────────────
+
+class CharacterSpell(models.Model):
+    """
+    Represents an item in a character's inventory.
+
+    This is a JOIN TABLE with extra attributes:
+      - quantity: how many of this item the character carries
+      - equipped: whether the item is currently worn/held
+
+    We define this as an explicit model (NOT using Django's ManyToManyField
+    shortcut) so you can see it as a real database table with its own rows
+    and columns. Every row says: "Character X has Y of Item Z, equipped=True/False."
+
+    The unique_together constraint means a character can only have one
+    inventory slot per item — to add more, increase the quantity.
+    """
+
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='spells')
+    spell     = models.ForeignKey(Spell, on_delete=models.CASCADE, related_name='character_spells')
+    prepared  = models.BooleanField(default=False)
+
+
+    class Meta:
+        unique_together = ('character', 'spell')  # One inventory row per character-item pair
+
+    def __str__(self):
+        prepared_label = ' [prepared]' if self.prepared else ''
+        return f"{self.character.name} — {self.spell.name}{prepared_label}"
+    
+# ─────────────────────────────────────────────────────────────────────
+# Prepared Spell  (join table: Character ↔ Spell)
+# ─────────────────────────────────────────────────────────────────────
+
+class PreparedSpell(models.Model):
+    """
+    Represents an item in a character's inventory.
+
+    This is a JOIN TABLE with extra attributes:
+      - quantity: how many of this item the character carries
+      - equipped: whether the item is currently worn/held
+
+    We define this as an explicit model (NOT using Django's ManyToManyField
+    shortcut) so you can see it as a real database table with its own rows
+    and columns. Every row says: "Character X has Y of Item Z, equipped=True/False."
+
+    The unique_together constraint means a character can only have one
+    inventory slot per item — to add more, increase the quantity.
+    """
+
+    character       = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='prepared_spells')
+    spell           = models.ForeignKey(Spell, on_delete=models.CASCADE, related_name='preparations')
+    session         = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='prepared_spells')
+    prepared        = models.BooleanField(default=True)  # Optional: usually True if listed here
+    usage_remaining = models.IntegerField(null=True, blank=True)  # Could reset per session
+
+    class Meta:
+        unique_together = ('character', 'spell', 'session')  # One inventory row per character-item pair
+
+    def __str__(self):
+        return f"{self.character.name} — {self.spell.name} for Session {self.session.session_number}"

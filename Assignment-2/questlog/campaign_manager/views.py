@@ -15,7 +15,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Campaign, CampaignPlayer, Character, Session, Encounter, Item, CharacterItem
+from .models import Campaign, CampaignPlayer, Character, Session, Encounter, Item, CharacterItem, CharacterSpell
 from .forms import (
     RegistrationForm,
     CampaignForm,
@@ -290,6 +290,10 @@ def character_detail(request, pk):
         character=character
     ).select_related('item').order_by('item__name')
 
+    # Adding in our edits to the code database: Character Spells 
+    spells = CharacterSpell.objects.filter(
+        character = character
+    ).select_related('spell').order_by('spell_name')
     is_owner = character.player == request.user
     is_dm    = character.campaign.dungeon_master == request.user
 
@@ -298,6 +302,7 @@ def character_detail(request, pk):
         'inventory': inventory,
         'is_owner':  is_owner,
         'is_dm':     is_dm,
+        'spells':    spells,
     })
 
 
