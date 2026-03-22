@@ -31,7 +31,7 @@
 
 
 <!-- ─── Stat Block ────────────────────────────────────────────────── -->
-<h1>Connection Test</h1>
+
 <div class="card stat-block">
   <h2>Character Stats</h2>
   <div class="stat-grid">
@@ -150,7 +150,8 @@
  <div class="section-header">
    <h2>Spells & Abilities</h2>
  </div>
-
+<p>Character: {{ character.name }}</p>
+<p>Spell count: {{ spells|length }}</p>
 
  {% if spells %}
    <table class="data-table">
