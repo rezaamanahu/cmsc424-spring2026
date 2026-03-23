@@ -89,6 +89,43 @@
     </div>
   {% endif %}
 </section>
+<!--Prepared Spells-->
+<section class="dashboard-section">
+<div class="section-header">
+    <h2>Prepared Spells</h2>
+  </div>
+  {% if prepared_spells %}
+  <table class = "data-table">
+    <thead>
+      <tr>
+        <th>Character</th>
+        <th>Spell Name</th>
+        <th>Spell Type</th>
+        <th>Usage Remaing</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in prepared_spells %}
+      <tr {% if entry.usage_remaining < 0 %} class ="row-equipped" {% endif %}>
+        <td>{{ entry.character.name }}</td>
+        <td>{{ entry.spell.name }}</td>
+        <td>{{ entry.spell.get_type_display }} </td>
+        <td>{% if entry.usage_remaining >= 0 %}
+                {{ entry.usage_remaining }}
+              {% else %}
+                —
+              {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <p>There are no prepared spells for this session.</p>
+  </div>
+  {% endif %}
+</section>
 
 <!-- Back link -->
 <p style="margin-top: 2rem;">

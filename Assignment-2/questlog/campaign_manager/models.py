@@ -393,7 +393,6 @@ class PreparedSpell(models.Model):
     character       = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='prepared_spells')
     spell           = models.ForeignKey(Spell, on_delete=models.CASCADE, related_name='preparations')
     session         = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='prepared_spells')
-    prepared        = models.BooleanField(default=True)  # Optional: usually True if listed here
     usage_remaining = models.IntegerField(null=True, blank=True)  # Could reset per session
 
     class Meta:

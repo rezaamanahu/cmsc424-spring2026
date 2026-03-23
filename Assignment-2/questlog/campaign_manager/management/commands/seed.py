@@ -14,7 +14,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from campaign_manager.models import (
     Campaign, CampaignPlayer, Character,
-    Item, CharacterItem, Session, Encounter, Spell, CharacterSpell
+    Item, CharacterItem, Session, Encounter, Spell, CharacterSpell, PreparedSpell
 )
 
 
@@ -933,7 +933,47 @@ class Command(BaseCommand):
             character=sylva, spell=meteor_swarm,
             defaults={'prepared': False},
         )
-
+        # ── Prepared Spells for Session ──────────────────────────────────
+        # Aria's Prepared Spells 
+        PreparedSpell.objects.get_or_create(
+            character=aria, 
+            spell= fireball,
+            session=sess1c1,
+            usage_remaining = -1,
+        )
+        PreparedSpell.objects.get_or_create(
+            character=aria, 
+            spell = magic_missile, 
+            session=sess1c1, 
+            usage_remaining=0, 
+        )
+        # Thorin's Prepared Spells 
+        PreparedSpell.objects.get_or_create(
+            character=thorin, 
+            spell=rage, 
+            session=sess1c1, 
+            usage_remaining=2
+        )
+        PreparedSpell.objects.get_or_create(
+            character=thorin,
+            spell=shield,
+            session=sess1c1,
+            usage_remaining = -1
+        )
+        # Sylva's Prepared Spells
+        PreparedSpell.objects.get_or_create(
+            character=sylva,
+            spell=cure_wounds,
+            session=sess1c2,
+            usage_remaining = -1
+        )
+        # Vicktor's Prepared Spells
+        PreparedSpell.objects.get_or_create(
+            character=viktor,
+            spell=magic_missile,
+            session=sess1c2,
+            usage_remaining = -1
+        )
         # ── Summary ──────────────────────────────────────────────────────
         self.stdout.write('\n' + '─' * 60)
         self.stdout.write(self.style.SUCCESS('✔  Seeding complete!\n'))

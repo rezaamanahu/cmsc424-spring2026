@@ -15,7 +15,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Campaign, CampaignPlayer, Character, Session, Encounter, Item, CharacterItem, CharacterSpell
+from .models import Campaign, CampaignPlayer, Character, Session, Encounter, Item, CharacterItem, CharacterSpell, PreparedSpell
 from .forms import (
     RegistrationForm,
     CampaignForm,
@@ -383,11 +383,13 @@ def session_detail(request, pk):
     session    = get_object_or_404(Session, pk=pk)
     encounters = Encounter.objects.filter(session=session)
     is_dm      = session.campaign.dungeon_master == request.user
+    prepared_spells = PreparedSpell.objects.filter(session=session).select_related('character', 'spell').order_by('character__name')
 
     return render(request, 'campaign_manager/session_detail.html', {
         'session':    session,
         'encounters': encounters,
         'is_dm':      is_dm,
+        'prepared_spells': prepared_spells,
     })
 
 
